@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="../mid-exam/data.js"></script>
+    <style>
+        table {
+            margin:0px;
+            border: 1px solid;
+            
+        }
+        table th{
+            color: cadetblue;
+            font-size: 1em;
+        }
+        table tr:hover{
+            color: rgb(203, 111, 24);
+        }
+        table,tr,td{
+            border: none;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 1em;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .descriptions{
+            font-size:0.05em;
+        }
+        tbody tr:nth-child(even){
+            background-color:rgba(0,0,0,0.15);
+        }
+        #search-tr{
+            text-align: center;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+    <table class="booktable" >
+        <thead>
+            <tr id="search-tr" colspan="11">
+                <td><input type="search" id="search-txt" placeholder="Search Here"></td>
+            </tr>
+
+            <tr>
+                <th onclick="sortTable('title',this)">Title <i class="bi bi-caret-down-fill"></i></th>
+                <th onclick="sortTable('isbn',this)">Isbn <i  class="bi bi-caret-down-fill"></i></th>
+                <th onclick="sortTable('pageCount',this)">PageCount <i class="bi bi-caret-down-fill"></i></th>
+                <th>Image</th>
+                <th onclick="sortTable('shortDescription',this)">ShortDescription <i class="bi bi-caret-down-fill"></i></th>
+                <th onclick="sortTable('status',this)">Status</th>
+                <th onclick="sortTable('authors',this)">Authors <i class="bi bi-caret-down-fill"></i></th>
+                <th onclick="sortTable('categories',this)">Categories <i class="bi bi-caret-down-fill"></i></th>
+                <th onclick="sortTable('price',this)">Price <i class="bi bi-caret-down-fill"></i></th>
+                <th>Currency <i class="bi bi-caret-down-fill"></i></th>
+                <th onclick="sortTable('discount',this)">Discount <i class="bi bi-caret-down-fill"></i></th>
+                <th>DiscountUnits</th>
+            </tr>
+        </thead>
+        <tbody id="bookdetails"></tbody>
+        <tfoot>
+            <tr>
+                <td><button id="prevbtn">Prev</button></td>
+                <td colspan="10"></td>
+                <td><button id="nextbtn">Next</button></td>
+
+            </tr>
+        </tfoot>
+    </table>
+    <script>   
+    var flag=true;
+    var start=0;
+    var end=start+10;
+
+    var filteredBooks=books;
+  function genUI(){
+
+    document.getElementById("bookdetails").innerHTML='';
+    var tenbooks=filteredBooks.slice(start,end);
+    tenbooks.forEach((book,id)=>{
+            var tr=document.createElement("tr");
+      
+            var tdTitle=document.createElement("td");
+            tdTitle.innerText=book.title;
+      
+            var tdisbn=document.createElement("td");
+            tdisbn.innerText=book.isbn;
+      
+            var tdPageCount=document.createElement("td");
+            tdPageCount.innerText=book.pageCount;
+    
+            
+            var tdImg=document.createElement("td");
+            var img=document.createElement("img");
+            img.src=book.thumbnailUrl;
+            img.style.height="100px";
+            img.style.width="100px";
+            tdImg.appendChild(img);
+    
+            var tdSd=document.createElement("td");
+            tdSd.classList.add("descriptions");
+            tdSd.innerText=book.shortDescription;
+    
+            var tdStatus=document.createElement("td");
+            tdStatus.innerText=book.status;
+    
+            var tdAuthors=document.createElement("td");
+            tdAuthors.innerText=book.authors;
+    
+            var tdCategories=document.createElement("td");
+            tdCategories.innerText=book.categories;
+    
+            
+            var tdPrice=document.createElement("td");
+            tdPrice.innerText=book.price;
+    
+            
+            var tdCurrency=document.createElement("td");
+            tdCurrency.innerText=book.currency;
+    
+            
+            var tdDiscount=document.createElement("td");
+            tdDiscount.innerText=book.discount;
+    
+            var tdDiscountUnits=document.createElement("td");
+            tdDiscountUnits.innerText=book.discountUnits;
+    
+        
+            tr.append(tdTitle);
+            tr.append(tdisbn);
+            tr.append(tdPageCount);
+            tr.append(tdImg);
+            tr.append(tdSd);
+            tr.append(tdStatus);
+            tr.append(tdAuthors);
+            tr.append(tdCategories);
+            tr.append(tdPrice);
+            tr.append(tdCurrency);
+            tr.append(tdDiscount);
+            tr.append(tdDiscountUnits);
+        document.getElementById("bookdetails").appendChild(tr);
+
+        });
+
+
+    }
+    genUI();
+    document.getElementById("nextbtn").addEventListener("click",function(){
+    document.getElementById('bookdetails').innerHTML='';
+    if(end<filteredBooks.length){
+        start=start+10;
+        console.log(start);
+        end=start+10;
+        console.log(end);
+        genUI();
+    }
+    })
+    document.getElementById("prevbtn").addEventListener("click",function(){
+        document.getElementById('bookdetails').innerHTML='';
+        if(start>=10){
+            start=start-10;
+            console.log(start);
+            end=start+10;
+            console.log(end);
+            genUI();
+        }
+    })
+
+    function sortTable(obj ,th){
+        document.getElementById("bookdetails").innerHTML='';
+        console.log(event);
+        console.log( event.target);
+        if(obj){
+
+            if(flag){
+    
+        
+                    books.sort((a,b)=>{
+                       if(a[obj] > b[obj]){
+                        return 1;
+                       }
+                       else{
+                        return -1;
+                       }
+                    })
+                flag=false;
+            }
+            else{
+                books.sort((a,b)=>{
+                    if(a[obj]>b[obj]){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+                }
+    
+                ).reverse();
+                flag=true;
+            }
+            genUI();
+            start=0;
+        }
+    }
+
+    document.getElementById("search-txt").addEventListener("input",function(){
+
+        var searchData=document.getElementById("search-txt").value;
+        console.log(searchData);
+        filteredBooks=books.filter(book=>{
+            return (
+
+                book.title.toLowerCase().includes(searchData.toLowerCase())||
+                book.authors.toString().toLowerCase().includes(searchData.toLowerCase())||
+                book.categories.toString().toLowerCase().includes(searchData.toLowerCase())||
+                book.price==searchData
+            )
+        })
+        console.log(filteredBooks);
+        genUI();
+    })
+    </script>
+</body>
+</html>
